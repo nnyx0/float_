@@ -51,7 +51,7 @@ class Operator(models.Model):
         help_text='Provide the order in which you wish to have this operator appear in the Message dropdown.')
 
     def __str__(self):
-        return f'{self.base} ({self.callsign}) {self.role}' # returns the Operator's name, role, and assigned location
+        return f'{self.name} ({self.role})' # returns the Operator's name, role, and assigned location
         # this helps reconcile the reported location of the Operator with their assigned location and the reported
         # location to assess if further support is required in the field.
 
@@ -78,7 +78,9 @@ class Message(models.Model):
         help_text='Create a new incident or select an existing incident.')
 
     def __str__(self):
-        return f'Message #{self.id}: {self.sender} -> {self.recipient} RE: {self.incident_ref}' # returns the {Message ID}: {Message Sender} -> {Message Recipient}, and Incident summary
+        sender_name = self.sender.name if self.sender else "Unknown"
+        recipient_name = self.recipient.name if self.recipient else "Unknown"
+        return f'Message #{self.id}: {self.sender} {sender_name} -> {self.recipient} {recipient_name} RE: {self.incident_ref}' # returns the {Message ID}: {Message Sender} -> {Message Recipient}, and Incident summary
 
     def serialize(self):
         message = {

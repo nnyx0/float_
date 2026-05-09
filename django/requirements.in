@@ -11,3 +11,5 @@ cbor2
 bidict
 uuid6
 pyzmq
+ipython
+django-debug-toolbar

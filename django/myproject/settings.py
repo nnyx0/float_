@@ -64,6 +64,8 @@ INSTALLED_APPS = [
     "django_bootstrap5",
     # Include this to add history to models
     "history",
+    "history.contrib.loaddata",
+    "history.contrib.migrate",
     # Include extras to make working with Django's CLI etc easier
     "django_extensions",
     # Helps with debugging. Only enabled if client is listed in INTERNAL_IPS

@@ -63,7 +63,7 @@ INSTALLED_APPS = [
     # Include this to build on top of Boostrap 5
     "django_bootstrap5",
     # Include this to add history to models
-    "simple_history",
+    "history",
     # Include extras to make working with Django's CLI etc easier
     "django_extensions",
     # Helps with debugging. Only enabled if client is listed in INTERNAL_IPS
@@ -84,7 +84,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # Include this to add history to models
-    "simple_history.middleware.HistoryRequestMiddleware",
+    "history.middleware.HistoryMiddleware",
 ]
 
 STORAGES = {

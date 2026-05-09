@@ -1,6 +1,5 @@
 from django.contrib import admin
 from .models import Role, Place, Operator, Message, IncidentPatient, Incident #, IncidentMessage,
-from simple_history.admin import SimpleHistoryAdmin
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 import csv
@@ -27,19 +26,19 @@ admin.site.add_action(download_csv)
 
 # Create your admin models here.
 
-class RoleAdmin(SimpleHistoryAdmin):
+class RoleAdmin(admin.ModelAdmin):
     list_display = ('title',)
 
-class PlaceAdmin(SimpleHistoryAdmin):
+class PlaceAdmin(admin.ModelAdmin):
     list_display = ('place',)
 
-class OperatorAdmin(SimpleHistoryAdmin):
+class OperatorAdmin(admin.ModelAdmin):
     list_display = ('name', 'callsign', 'base', 'role', 'phone', 'email', 'command_weighting', 'last_updated_timestamp',)
     list_filter = ('role', 'base')
     search_fields = ['name', 'callsign',]
     list_editable = ()
 
-class MessageAdmin(SimpleHistoryAdmin):
+class MessageAdmin(admin.ModelAdmin):
     list_display = ('id', 'sender', 'recipient', 'reported_location', 'message_entry_timestamp', 'last_updated_user', 'last_updated_timestamp', 'message_info',)
     list_editable = ()
     exclude = ('last_updated_user',)
@@ -50,17 +49,17 @@ class MessageAdmin(SimpleHistoryAdmin):
         obj.last_updated_user = request.user
         super().save_model(request, obj, form, change)
 
-class IncidentPatientAdmin(SimpleHistoryAdmin):
+class IncidentPatientAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'age', 'gender', 'incident_ref', 'last_updated_timestamp',)
     list_filter = ('incident_ref',)
     search_fields = ['name',]
 
-class IncidentAdmin(SimpleHistoryAdmin):
+class IncidentAdmin(admin.ModelAdmin):
     list_display = ('id', 'reported_location', 'event_occurance_timestamp', 'patient_ref', 'incident_message_type', 'nature_of_injury', 'has_this_been_escalated', 'is_incident_controlled', 'is_incident_resolved', 'last_updated_timestamp',)
     list_filter = ('reported_location', 'incident_message_type', 'patient_ref', 'has_this_been_escalated', 'is_incident_controlled', 'is_incident_resolved',)
     search_fields = ['reported_location', 'cause_of_injury', 'nature_of_injury', 'effects_of_injury', 'treatment_provided']
 
-# class IncidentMessageAdmin(SimpleHistoryAdmin):
+# class IncidentMessageAdmin(admin.ModelAdmin):
 #     list_display = ('id', 'incident_ref', 'sender', 'recipient', 'reported_location', 'message_entry_timestamp', 'last_updated_timestamp', 'message_info',)
 #     list_filter = ('incident_ref',)
 

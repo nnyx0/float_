@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.db import models
-from simple_history.models import HistoricalRecords
 from django.utils import timezone
 
 import cbor2
@@ -9,7 +8,6 @@ import cbor2
 
 class Role(models.Model):
     id = models.BigAutoField(primary_key=True)
-    history = HistoricalRecords()
     last_updated_timestamp = models.DateTimeField(auto_now=True, null=True) # Updates timestamp each time the object is save.
     # end of basic fields
 
@@ -21,7 +19,6 @@ class Role(models.Model):
 
 class Place(models.Model):
     id = models.BigAutoField(primary_key=True)
-    history = HistoricalRecords()
     last_updated_timestamp = models.DateTimeField(auto_now=True, null=True) # Updates timestamp each time the object is save.
     # end of basic fields
 
@@ -33,7 +30,6 @@ class Place(models.Model):
 
 class Operator(models.Model):
     id = models.BigAutoField(primary_key=True)
-    history = HistoricalRecords()
     last_updated_timestamp = models.DateTimeField(auto_now=True, null=True) # Updates timestamp each time the object is save.
     # end of basic fields
 
@@ -60,7 +56,6 @@ class Operator(models.Model):
 
 class Message(models.Model):
     id = models.BigAutoField(primary_key=True)
-    history = HistoricalRecords()
     last_updated_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     last_updated_timestamp = models.DateTimeField(auto_now=True, null=True) # Updates timestamp each time the object is save.
     # end of basic fields
@@ -107,7 +102,6 @@ class Message(models.Model):
 
 class IncidentPatient(models.Model):
     id = models.BigAutoField(primary_key=True)
-    history = HistoricalRecords()
     last_updated_timestamp = models.DateTimeField(auto_now=True, null=True) # Updates timestamp each time the object is save.
     # end of basic fields
 
@@ -129,7 +123,6 @@ class IncidentPatient(models.Model):
 
 class Incident(models.Model):
     id = models.BigAutoField(primary_key=True)
-    history = HistoricalRecords()
     last_updated_timestamp = models.DateTimeField(auto_now=True) # Updates timestamp each time the object is save.
     # end of basic fields
 
@@ -180,7 +173,6 @@ class Incident(models.Model):
 
 #class IncidentMessage(models.Model):
 #    id = models.BigAutoField(primary_key=True)
-#    history = HistoricalRecords()
 #    last_updated_timestamp = models.DateTimeField(auto_now=True, null=True) # Updates timestamp each time the object is save.
 #    # end of basic fields
 

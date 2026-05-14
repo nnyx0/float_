@@ -18,6 +18,8 @@ services:
     env_file: .env
     volumes:
       - ./django:/code
+      # For a local SQLite db
+      - ./db:/db
       - static_files:/static
       - media_files:/media
     ports:

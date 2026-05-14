@@ -1,10 +1,10 @@
 #!/bin/sh
 
-echo "Performing Django database migrations (if any)"
-python manage.py migrate --no-input
-
 echo "Ensuring model history tracking is enabled"
 python manage.py triggers enable
+
+echo "Performing Django database migrations (if any)"
+python manage.py migrate --no-input
 
 echo "Copying static files"
 python manage.py collectstatic --no-input --clear

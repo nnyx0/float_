@@ -24,9 +24,9 @@ services:
       - media_files:/media
     ports:
       - "$APP_PORT:8000"
-    depends_on:
-      db:
-        condition: service_healthy
+    #depends_on:
+    #  db:
+    #    condition: service_healthy
 
 volumes:
   db_data:

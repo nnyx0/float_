@@ -4,6 +4,7 @@ djangorestframework
 psycopg2-binary
 django-bootstrap5
 gunicorn
+django-simple-history
 django-history-triggers
 whitenoise
 django-extensions

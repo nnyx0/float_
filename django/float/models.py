@@ -21,7 +21,8 @@ class Place(models.Model):
     id = models.BigAutoField(primary_key=True)
     last_updated_timestamp = models.DateTimeField(auto_now=True, null=True) # Updates timestamp each time the object is save.
     # end of basic fields
-
+    callsign = models.CharField(max_length=50, null=True, blank=True,
+        help_text='Callsign of the Base.')
     place = models.CharField(max_length=50, null=False,
         help_text = 'Location assigned for the event.')
 
@@ -47,7 +48,7 @@ class Operator(models.Model):
         help_text='Provide the order in which you wish to have this operator appear in the Message dropdown.')
 
     def __str__(self):
-        return f'{self.name} ({self.role})' # returns the Operator's name, role, and assigned location
+        return f'{self.name} {self.base.callsign} ({self.base})' # returns the Operator's name, role, and assigned location
         # this helps reconcile the reported location of the Operator with their assigned location and the reported
         # location to assess if further support is required in the field.
 

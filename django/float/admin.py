@@ -3,6 +3,7 @@ from .models import Role, Place, Operator, Message, IncidentPatient, Incident, C
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.db import models
+from django.utils.text import Truncator
 import csv
 
 @admin.action(description='Download selected as csv')
@@ -35,13 +36,13 @@ class RoleAdmin(admin.ModelAdmin):
         return len(obj.is_operator_role.all()) or 0
 
 class PlaceAdmin(admin.ModelAdmin):
-    list_display = ('place', 'callsign', 'address', 'latitude', 'longitude')
+    list_display = ('place', 'callsign', 'address', 'location')
     fieldsets = (
         ('Basic Information', {
             'fields': ('place', 'callsign')
         }),
         ('Location', {
-            'fields': ('address', 'latitude', 'longitude'),
+            'fields': ('address', 'location'),
             'description': 'Enter either an address or GPS coordinates (or both)'
         }),
     )
@@ -61,9 +62,7 @@ class MessageAdmin(admin.ModelAdmin):
 
     @admin.display(description="Message Info")
     def short_display_info(self, obj:Message) -> str:
-        from django.utils.text import Truncator
         return Truncator(obj.message_info).words(5)
-
 
     def save_model(self, request, obj, form, change):
         obj.last_updated_user = request.user

@@ -50,14 +50,13 @@ INTERNAL_IPS = [
 
 INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
+    "django.contrib.gis",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # Add gis module for geospatial projects
-    #'django.contrib.gis',
     # Include this to build REST APIs
     "rest_framework",
     # Include this to build on top of Boostrap 5

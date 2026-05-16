@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+from django.contrib.gis.db import models as gis
 
 import cbor2
 
@@ -33,12 +34,11 @@ class Place(models.Model):
         help_text='Callsign of the Base.')
     place = models.CharField(max_length=50, null=False,
         help_text = 'Location assigned for the event.')
-    latitude = models.FloatField(null=True, blank=True,
-        help_text='GPS latitude coordinate of the place.')
-    longitude = models.FloatField(null=True, blank=True,
-        help_text='GPS longitude coordinate of the place.')
-    address = models.CharField(max_length=256, null=True, blank=True,
-        help_text='Physical address of the place.')
+    
+    location = gis.PointField(null=True, blank=True, help_text='GPS coordinates of the location.')
+
+    address = models.TextField(max_length=256, null=True, blank=True,
+        help_text='Address of the location, if known.')
 
     def __str__(self):
         return self.place # returns the Place (assigned location)

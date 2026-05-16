@@ -27,7 +27,11 @@ admin.site.add_action(download_csv)
 # Create your admin models here.
 
 class RoleAdmin(admin.ModelAdmin):
-    list_display = ('title',)
+    list_display = ('title', 'operator_count')
+
+    @admin.display(description="Count")
+    def operator_count(self, obj:Role) -> int:
+        return len(obj.is_operator_role.all()) or 0
 
 class PlaceAdmin(admin.ModelAdmin):
     list_display = ('place', 'callsign', 'address', 'latitude', 'longitude')

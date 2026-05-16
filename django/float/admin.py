@@ -30,7 +30,16 @@ class RoleAdmin(admin.ModelAdmin):
     list_display = ('title',)
 
 class PlaceAdmin(admin.ModelAdmin):
-    list_display = ('place',)
+    list_display = ('place', 'callsign', 'address', 'latitude', 'longitude')
+    fieldsets = (
+        ('Basic Information', {
+            'fields': ('place', 'callsign')
+        }),
+        ('Location', {
+            'fields': ('address', 'latitude', 'longitude'),
+            'description': 'Enter either an address or GPS coordinates (or both)'
+        }),
+    )
 
 class OperatorAdmin(admin.ModelAdmin):
     list_display = ('name', 'callsign', 'base', 'role', 'phone', 'email', 'command_weighting', 'last_updated_timestamp',)

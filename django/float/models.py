@@ -25,6 +25,12 @@ class Place(models.Model):
         help_text='Callsign of the Base.')
     place = models.CharField(max_length=50, null=False,
         help_text = 'Location assigned for the event.')
+    latitude = models.FloatField(null=True, blank=True,
+        help_text='GPS latitude coordinate of the place.')
+    longitude = models.FloatField(null=True, blank=True,
+        help_text='GPS longitude coordinate of the place.')
+    address = models.CharField(max_length=256, null=True, blank=True,
+        help_text='Physical address of the place.')
 
     def __str__(self):
         return self.place # returns the Place (assigned location)

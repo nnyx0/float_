@@ -10,6 +10,7 @@ RUN apt-get update && \
       gdal-bin \
       libgdal-dev \
       libgeos-dev \
+      libsqlite3-mod-spatialite \
     && \
     apt-get -y autoremove && \
     apt-get -y clean && \

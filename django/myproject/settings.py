@@ -142,6 +142,11 @@ DATABASES = {
     }
 }
 
+SPATIALITE_LIBRARY_PATH = env(
+    "SPATIALITE_LIBRARY_PATH",
+    default="/usr/lib/x86_64-linux-gnu/mod_spatialite.so",
+)
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

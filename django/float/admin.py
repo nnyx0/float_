@@ -39,11 +39,17 @@ class OperatorAdmin(admin.ModelAdmin):
     list_editable = ()
 
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'sender', 'recipient', 'reported_location', 'message_entry_timestamp', 'last_updated_user', 'last_updated_timestamp', 'message_info',)
+    list_display = ('id', 'sender', 'recipient', 'reported_location', 'message_entry_timestamp', 'last_updated_user', 'last_updated_timestamp', 'short_display_info',)
     list_editable = ()
     exclude = ('last_updated_user',)
     list_filter = ('sender', 'recipient', 'reported_location')
     search_fields = ['message_info']
+
+    @admin.display(description="Message Info")
+    def short_display_info(self, obj:Message) -> str:
+        from django.utils.text import Truncator
+        return Truncator(obj.message_info).words(5)
+
 
     def save_model(self, request, obj, form, change):
         obj.last_updated_user = request.user

@@ -1,6 +1,8 @@
 Django
 django-environ
 djangorestframework
+GDAL
+pyproj
 psycopg2-binary
 django-bootstrap5
 gunicorn

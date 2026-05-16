@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth import get_user_model
 
 import cbor2
 
@@ -16,6 +17,13 @@ class Role(models.Model):
 
     def __str__(self):
         return self.title # returns the Role Title
+
+class Patrol(models.Model):
+    name = models.CharField(max_length=10)
+    description = models.CharField(max_length=256, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
 
 class Place(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -34,6 +42,27 @@ class Place(models.Model):
 
     def __str__(self):
         return self.place # returns the Place (assigned location)
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    location = models.ForeignKey(Place, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.user)
+
+class CheckIn(models.Model):
+    class State(models.IntegerChoices):
+        CHECKED_IN = 1
+        CHECKED_OUT = 2
+
+    patrol = models.ForeignKey(Patrol, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
+    location = models.ForeignKey(Place, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(null=False) # Updates timestamp each time the object is save.
+    state = models.IntegerField(choices=State)
+
+    def __str__(self):
+        return f"{self.patrol} {CheckIn.State(self.state).name} {self.location} @ {self.timestamp}"
 
 class Operator(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -54,7 +83,11 @@ class Operator(models.Model):
         help_text='Provide the order in which you wish to have this operator appear in the Message dropdown.')
 
     def __str__(self):
-        return f'{self.name} {self.base.callsign} ({self.base})' # returns the Operator's name, role, and assigned location
+        try:
+            callsign = self.base.callsign
+        except TypeError:
+            callsign = ""
+        return f'{self.base} {callsign} ({self.name})' # returns the Operator's name, role, and assigned location
         # this helps reconcile the reported location of the Operator with their assigned location and the reported
         # location to assess if further support is required in the field.
 

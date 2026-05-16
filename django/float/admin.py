@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django import forms
+from django.contrib.gis.geos import Point
+from django.core.exceptions import ValidationError
 from .models import Role, Place, Operator, Message, IncidentPatient, Incident, CheckIn, Patrol, UserProfile #, IncidentMessage,
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
@@ -36,13 +39,49 @@ class RoleAdmin(admin.ModelAdmin):
         return len(obj.is_operator_role.all()) or 0
 
 class PlaceAdmin(admin.ModelAdmin):
+    class PlaceAdminForm(forms.ModelForm):
+        location_longitude = forms.FloatField(
+            required=False,
+            help_text="Longitude (e.g., 151.2093).",
+        )
+        location_latitude = forms.FloatField(
+            required=False,
+            help_text="Latitude (e.g., -33.8688).",
+        )
+
+        class Meta:
+            model = Place
+            fields = "__all__"
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            if self.instance and self.instance.location:
+                self.fields["location_longitude"].initial = self.instance.location.x
+                self.fields["location_latitude"].initial = self.instance.location.y
+
+        def clean(self):
+            cleaned_data = super().clean()
+            lon = cleaned_data.get("location_longitude")
+            lat = cleaned_data.get("location_latitude")
+
+            if lon is None and lat is None:
+                cleaned_data["location"] = None
+                return cleaned_data
+
+            if lon is None or lat is None:
+                raise ValidationError("Provide both longitude and latitude.")
+
+            cleaned_data["location"] = Point(lon, lat)
+            return cleaned_data
+
+    form = PlaceAdminForm
     list_display = ('place', 'callsign', 'address', 'location')
     fieldsets = (
         ('Basic Information', {
             'fields': ('place', 'callsign')
         }),
         ('Location', {
-            'fields': ('address', 'location'),
+            'fields': ('address', 'location_longitude', 'location_latitude'),
             'description': 'Enter either an address or GPS coordinates (or both)'
         }),
     )

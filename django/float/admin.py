@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import Role, Place, Operator, Message, IncidentPatient, Incident, CheckIn, Patrol, UserProfile #, IncidentMessage,
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
+from django.db import models
 import csv
 
 @admin.action(description='Download selected as csv')
@@ -70,6 +71,13 @@ class PatrolAdmin(admin.ModelAdmin):
 
 class CheckInAdmin(admin.ModelAdmin):
     list_display = ('timestamp', 'patrol', 'location', 'state')
+    #formfield_overrides = {
+    #        models.TextField: {"attrs": {"value": },
+    #}
+
+    def save_model(self, request, obj, form, change):
+        obj.user = request.user
+        obj.save()
 
 
 class UserProfileAdmin(admin.ModelAdmin):

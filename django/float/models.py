@@ -50,6 +50,7 @@ class CheckIn(models.Model):
         CHECKED_OUT = 2
 
     patrol = models.ForeignKey(Patrol, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
     location = models.ForeignKey(Place, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(null=False) # Updates timestamp each time the object is save.
     state = models.IntegerField(choices=State)

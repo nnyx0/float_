@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth import get_user_model
 
 import cbor2
 
@@ -35,6 +36,13 @@ class Place(models.Model):
 
     def __str__(self):
         return self.place # returns the Place (assigned location)
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    location = models.ForeignKey(Place, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.user)
 
 class CheckIn(models.Model):
     class State(models.IntegerChoices):

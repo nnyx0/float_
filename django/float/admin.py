@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Role, Place, Operator, Message, IncidentPatient, Incident, CheckIn, Patrol #, IncidentMessage,
+from .models import Role, Place, Operator, Message, IncidentPatient, Incident, CheckIn, Patrol, UserProfile #, IncidentMessage,
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 import csv
@@ -71,6 +71,10 @@ class PatrolAdmin(admin.ModelAdmin):
 class CheckInAdmin(admin.ModelAdmin):
     list_display = ('timestamp', 'patrol', 'location', 'state')
 
+
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'location')
+
 # Register your models here.
 
 admin.site.register(Role, RoleAdmin)
@@ -81,4 +85,5 @@ admin.site.register(IncidentPatient, IncidentPatientAdmin)
 admin.site.register(Incident, IncidentAdmin)
 admin.site.register(Patrol, PatrolAdmin)
 admin.site.register(CheckIn, CheckInAdmin)
+admin.site.register(UserProfile, UserProfileAdmin)
 # admin.site.register(IncidentMessage, IncidentMessageAdmin)

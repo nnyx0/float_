@@ -17,6 +17,13 @@ class Role(models.Model):
     def __str__(self):
         return self.title # returns the Role Title
 
+class Patrol(models.Model):
+    name = models.CharField(max_length=10)
+    description = models.CharField(max_length=256, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
 class Place(models.Model):
     id = models.BigAutoField(primary_key=True)
     last_updated_timestamp = models.DateTimeField(auto_now=True, null=True) # Updates timestamp each time the object is save.
@@ -28,6 +35,19 @@ class Place(models.Model):
 
     def __str__(self):
         return self.place # returns the Place (assigned location)
+
+class CheckIn(models.Model):
+    class State(models.IntegerChoices):
+        CHECKED_IN = 1
+        CHECKED_OUT = 2
+
+    patrol = models.ForeignKey(Patrol, on_delete=models.CASCADE)
+    location = models.ForeignKey(Place, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(null=False) # Updates timestamp each time the object is save.
+    state = models.IntegerField(choices=State)
+
+    def __str__(self):
+        return f"{self.patrol} {CheckIn.State(self.state).name} {self.location} @ {self.timestamp}"
 
 class Operator(models.Model):
     id = models.BigAutoField(primary_key=True)

@@ -48,7 +48,11 @@ class Operator(models.Model):
         help_text='Provide the order in which you wish to have this operator appear in the Message dropdown.')
 
     def __str__(self):
-        return f'{self.base} {self.base.callsign} ({self.name})' # returns the Operator's name, role, and assigned location
+        try:
+            callsign = self.base.callsign
+        except TypeError:
+            callsign = ""
+        return f'{self.base} {callsign} ({self.name})' # returns the Operator's name, role, and assigned location
         # this helps reconcile the reported location of the Operator with their assigned location and the reported
         # location to assess if further support is required in the field.
 

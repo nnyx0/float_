@@ -6,7 +6,7 @@ psycopg2-binary
 django-bootstrap5
 gunicorn
 django-simple-history
-django-history-triggers
+git+https://github.com/imsweb/django-history-triggers.git@refs/pull/16/head
 whitenoise
 django-extensions
 cbor2

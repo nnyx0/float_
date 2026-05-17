@@ -2,7 +2,6 @@ Django
 django-environ
 djangorestframework
 GDAL==3.10.3
-pyproj
 psycopg2-binary
 django-bootstrap5
 gunicorn

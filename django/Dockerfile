@@ -5,11 +5,7 @@ WORKDIR /code
 
 RUN apt-get update && \
     apt-get install -y \
-      binutils \
-      libproj-dev \
-      gdal-bin \
       libgdal-dev \
-      libgeos-dev \
       libsqlite3-mod-spatialite \
     && \
     apt-get -y autoremove && \

@@ -125,9 +125,9 @@ WSGI_APPLICATION = "myproject.wsgi.application"
 DATABASES = {
     "default": {
         # Use sqlite by default
-        "ENGINE": env("DB_ENGINE", default="django.db.backends.sqlite3"),
+        #"ENGINE": env("DB_ENGINE", default="django.db.backends.sqlite3"),
         # Use spatialite for spatial projects
-        #"ENGINE": env("DB_ENGINE", default="django.contrib.gis.db.backends.spatialite"),
+        "ENGINE": env("DB_ENGINE", default="django.contrib.gis.db.backends.spatialite"),
         # Use regular Postgres in production
         #"ENGINE": env("DB_ENGINE", default="django.db.backends.postgresql_psycopg2"),
         # Use PostGIS in production for spatial projects

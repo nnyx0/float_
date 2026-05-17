@@ -209,3 +209,5 @@ ADMINS = email.utils.getaddresses(["To: %s" % (env("ADMINS", default=""))])
 
 WHITENOISE_KEEP_ONLY_HASHED_FILES = True
 WHITENOISE_INDEX_FILE = True
+
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"

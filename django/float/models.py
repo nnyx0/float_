@@ -34,7 +34,7 @@ class Place(models.Model):
         help_text='Callsign of the Base.')
     place = models.CharField(max_length=50, null=False,
         help_text = 'Location assigned for the event.')
-    
+
     location = gis.PointField(null=True, blank=True, help_text='GPS coordinates of the location.')
 
     address = models.TextField(max_length=256, null=True, blank=True,

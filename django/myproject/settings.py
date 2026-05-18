@@ -50,13 +50,14 @@ INTERNAL_IPS = [
 
 INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
-    "django.contrib.gis",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Add gis module for geospatial projects
+    "django.contrib.gis",
     # Include this to build REST APIs
     "rest_framework",
     # Include this to build on top of Boostrap 5
@@ -124,13 +125,13 @@ WSGI_APPLICATION = "myproject.wsgi.application"
 DATABASES = {
     "default": {
         # Use sqlite by default
-        "ENGINE": env("DB_ENGINE", default="django.db.backends.sqlite3"),
+        #"ENGINE": env("DB_ENGINE", default="django.db.backends.sqlite3"),
         # Use spatialite for spatial projects
-        #'ENGINE': env("DB_ENGINE", default='django.contrib.gis.db.backends.spatialite'),
+        "ENGINE": env("DB_ENGINE", default="django.contrib.gis.db.backends.spatialite"),
         # Use regular Postgres in production
-        #'ENGINE': env("DB_ENGINE", default='django.db.backends.postgresql_psycopg2'),
+        #"ENGINE": env("DB_ENGINE", default="django.db.backends.postgresql_psycopg2"),
         # Use PostGIS in production for spatial projects
-        #'ENGINE': env("DB_ENGINE", default='django.contrib.gis.db.backends.postgis'),
+        #"ENGINE": env("DB_ENGINE", default="django.contrib.gis.db.backends.postgis"),
         "NAME": env(
             "POSTGRES_DB",
             default=env("DB_NAME", default=str(BASE_DIR.parent / "db/db.sqlite3")),
@@ -141,12 +142,6 @@ DATABASES = {
         "PORT": env("POSTGRES_PORT", default="5432"),
     }
 }
-
-SPATIALITE_LIBRARY_PATH = env(
-    "SPATIALITE_LIBRARY_PATH",
-    default="/usr/lib/x86_64-linux-gnu/mod_spatialite.so",
-)
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -214,3 +209,5 @@ ADMINS = email.utils.getaddresses(["To: %s" % (env("ADMINS", default=""))])
 
 WHITENOISE_KEEP_ONLY_HASHED_FILES = True
 WHITENOISE_INDEX_FILE = True
+
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"

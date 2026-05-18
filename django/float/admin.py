@@ -1,24 +1,39 @@
-from django.contrib import admin
-from django import forms
-from django.contrib.gis.geos import Point
-from django.contrib.gis.admin import GISModelAdmin
-from django.core.exceptions import ValidationError
-from .models import Role, Place, Operator, Message, IncidentPatient, Incident, CheckIn, Patrol, UserProfile #, IncidentMessage,
-from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse
-from django.db import models
-from django.utils.text import Truncator
 import csv
 
-@admin.action(description='Download selected as csv')
+from django.contrib import admin
+from django.contrib.gis.admin import GISModelAdmin
+from django.contrib.gis.geos import Point
+from django.core.exceptions import PermissionDenied, ValidationError
+from django.db import models
+from django.http import HttpResponse
+from django.utils.text import Truncator
+
+from django import forms
+
+from .models import (  # , IncidentMessage,
+    CheckIn,
+    Incident,
+    IncidentPatient,
+    Message,
+    Operator,
+    Patrol,
+    Place,
+    Role,
+    UserProfile,
+)
+
+
+@admin.action(description="Download selected as csv")
 def download_csv(modeladmin, request, queryset):
     if not request.user.is_staff:
         raise PermissionDenied
     opts = queryset.model._meta
     model = queryset.model
-    response = HttpResponse(content_type='text/csv')
+    response = HttpResponse(content_type="text/csv")
     # force download.
-    response['Content-Disposition'] = f'attachment;filename={model._meta.model_name}.csv'
+    response["Content-Disposition"] = (
+        f"attachment;filename={model._meta.model_name}.csv"
+    )
     # the csv writer
     writer = csv.writer(response)
     field_names = [field.name for field in opts.fields]
@@ -28,59 +43,130 @@ def download_csv(modeladmin, request, queryset):
     for obj in queryset:
         writer.writerow([getattr(obj, field) for field in field_names])
     return response
+
+
 admin.site.add_action(download_csv)
 
 # Create your admin models here.
 
+
 class RoleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'operator_count')
+    list_display = ("title", "operator_count")
 
     @admin.display(description="Count")
-    def operator_count(self, obj:Role) -> int:
+    def operator_count(self, obj: Role) -> int:
         return len(obj.is_operator_role.all()) or 0
 
+
 class PlaceAdmin(GISModelAdmin):
-    list_display = ('place', 'callsign', 'address', 'location')
+    gis_widget_kwargs = {
+        "attrs": {
+            "default_lon": 144.9631,
+            "default_lat": -37.8136,
+            "default_zoom": 10,
+        }
+    }
+    list_display = ("place", "callsign", "address", "location")
     fieldsets = (
-        ('Basic Information', {
-            'fields': ('place', 'callsign')
-        }),
-        ('Location', {
-            'fields': ('address', 'location'),
-            'description': 'Enter either an address or GPS coordinates (or both)'
-        }),
+        ("Basic Information", {"fields": ("place", "callsign")}),
+        (
+            "Location",
+            {
+                "fields": ("address", "location"),
+                "description": "Enter either an address or GPS coordinates (or both)",
+            },
+        ),
     )
 
+
 class OperatorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'callsign', 'base', 'role', 'phone', 'email', 'command_weighting', 'last_updated_timestamp',)
-    list_filter = ('role', 'base')
-    search_fields = ['name', 'callsign',]
+    list_display = (
+        "name",
+        "callsign",
+        "base",
+        "role",
+        "phone",
+        "email",
+        "command_weighting",
+        "last_updated_timestamp",
+    )
+    list_filter = ("role", "base")
+    search_fields = [
+        "name",
+        "callsign",
+    ]
     list_editable = ()
+
 
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'sender', 'recipient', 'reported_location', 'message_entry_timestamp', 'last_updated_user', 'last_updated_timestamp', 'short_display_info',)
+    list_display = (
+        "id",
+        "sender",
+        "recipient",
+        "reported_location",
+        "message_entry_timestamp",
+        "last_updated_user",
+        "last_updated_timestamp",
+        "short_display_info",
+    )
     list_editable = ()
-    exclude = ('last_updated_user',)
-    list_filter = ('sender', 'recipient', 'reported_location')
-    search_fields = ['message_info']
+    exclude = ("last_updated_user",)
+    list_filter = ("sender", "recipient", "reported_location")
+    search_fields = ["message_info"]
 
     @admin.display(description="Message Info")
-    def short_display_info(self, obj:Message) -> str:
+    def short_display_info(self, obj: Message) -> str:
         return Truncator(obj.message_info).words(5)
 
     def save_model(self, request, obj, form, change):
         obj.last_updated_user = request.user
         super().save_model(request, obj, form, change)
 
+
 class IncidentPatientAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'age', 'gender', 'incident_ref', 'last_updated_timestamp',)
-    list_filter = ('incident_ref',)
-    search_fields = ['name',]
+    list_display = (
+        "id",
+        "name",
+        "age",
+        "gender",
+        "incident_ref",
+        "last_updated_timestamp",
+    )
+    list_filter = ("incident_ref",)
+    search_fields = [
+        "name",
+    ]
+
 
 class IncidentAdmin(admin.ModelAdmin):
-    list_display = ('id', 'reported_location', 'event_occurance_timestamp', 'patient_ref', 'incident_message_type', 'nature_of_injury', 'has_this_been_escalated', 'is_incident_controlled', 'is_incident_resolved', 'last_updated_timestamp',)
-    list_filter = ('reported_location', 'incident_message_type', 'patient_ref', 'has_this_been_escalated', 'is_incident_controlled', 'is_incident_resolved',)
-    search_fields = ['reported_location', 'cause_of_injury', 'nature_of_injury', 'effects_of_injury', 'treatment_provided']
+    list_display = (
+        "id",
+        "reported_location",
+        "event_occurance_timestamp",
+        "patient_ref",
+        "incident_message_type",
+        "nature_of_injury",
+        "has_this_been_escalated",
+        "is_incident_controlled",
+        "is_incident_resolved",
+        "last_updated_timestamp",
+    )
+    list_filter = (
+        "reported_location",
+        "incident_message_type",
+        "patient_ref",
+        "has_this_been_escalated",
+        "is_incident_controlled",
+        "is_incident_resolved",
+    )
+    search_fields = [
+        "reported_location",
+        "cause_of_injury",
+        "nature_of_injury",
+        "effects_of_injury",
+        "treatment_provided",
+    ]
+
 
 # class IncidentMessageAdmin(admin.ModelAdmin):
 #     list_display = ('id', 'incident_ref', 'sender', 'recipient', 'reported_location', 'message_entry_timestamp', 'last_updated_timestamp', 'message_info',)
@@ -88,14 +174,14 @@ class IncidentAdmin(admin.ModelAdmin):
 
 
 class PatrolAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description')
+    list_display = ("name", "description")
 
 
 class CheckInAdmin(admin.ModelAdmin):
-    list_display = ('timestamp', 'patrol', 'location', 'state')
-    #formfield_overrides = {
+    list_display = ("timestamp", "patrol", "location", "state")
+    # formfield_overrides = {
     #        models.TextField: {"attrs": {"value": },
-    #}
+    # }
 
     def save_model(self, request, obj, form, change):
         obj.user = request.user
@@ -103,7 +189,8 @@ class CheckInAdmin(admin.ModelAdmin):
 
 
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'location')
+    list_display = ("user", "location")
+
 
 # Register your models here.
 
